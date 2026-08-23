@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createApp } from '../app';
-import { Contact } from '../models/Contact';
+import { createApp } from '../app.js';
+import { Contact } from '../models/Contact.js';
 
 const id = '507f1f77bcf86cd799439011';
 const sample = {
