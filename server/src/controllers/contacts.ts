@@ -6,6 +6,11 @@ import { contactInputSchema, contactQuerySchema } from '../validation/contact.js
 
 const escapeRegex = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
+function getId(req: Request): string {
+  const value = req.params.id;
+  return Array.isArray(value) ? (value[0] ?? '') : value;
+}
+
 function ensureObjectId(id: string) {
   if (!mongoose.isValidObjectId(id)) throw new HttpError(400, 'Invalid contact id');
 }
@@ -36,8 +41,9 @@ export async function listContacts(req: Request, res: Response, next: NextFuncti
 
 export async function getContact(req: Request, res: Response, next: NextFunction) {
   try {
-    ensureObjectId(req.params.id);
-    const contact = await Contact.findById(req.params.id);
+    const id = getId(req);
+    ensureObjectId(id);
+    const contact = await Contact.findById(id);
     if (!contact) throw new HttpError(404, 'Contact not found');
     res.json({ data: contact });
   } catch (error) {
@@ -57,9 +63,10 @@ export async function createContact(req: Request, res: Response, next: NextFunct
 
 export async function updateContact(req: Request, res: Response, next: NextFunction) {
   try {
-    ensureObjectId(req.params.id);
+    const id = getId(req);
+    ensureObjectId(id);
     const input = contactInputSchema.parse(req.body);
-    const contact = await Contact.findByIdAndUpdate(req.params.id, input, {
+    const contact = await Contact.findByIdAndUpdate(id, input, {
       new: true,
       runValidators: true
     });
@@ -72,8 +79,9 @@ export async function updateContact(req: Request, res: Response, next: NextFunct
 
 export async function deleteContact(req: Request, res: Response, next: NextFunction) {
   try {
-    ensureObjectId(req.params.id);
-    const contact = await Contact.findByIdAndDelete(req.params.id);
+    const id = getId(req);
+    ensureObjectId(id);
+    const contact = await Contact.findByIdAndDelete(id);
     if (!contact) throw new HttpError(404, 'Contact not found');
     res.status(204).send();
   } catch (error) {
