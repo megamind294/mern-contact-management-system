@@ -1,0 +1,16 @@
+import { Router } from 'express';
+import {
+  createContact,
+  deleteContact,
+  getContact,
+  listContacts,
+  updateContact
+} from '../controllers/contacts.js';
+
+export const contactsRouter = Router();
+
+contactsRouter.get('/', listContacts);
+contactsRouter.get('/:id', getContact);
+contactsRouter.post('/', createContact);
+contactsRouter.put('/:id', updateContact);
+contactsRouter.delete('/:id', deleteContact);
