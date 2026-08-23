@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { contactInputSchema } from './contact';
+import { contactInputSchema } from './contact.js';
 
 const validContact = {
   firstName: ' Rinkle ',
